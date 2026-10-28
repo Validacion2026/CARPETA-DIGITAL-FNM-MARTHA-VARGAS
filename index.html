@@ -45,7 +45,6 @@
       gap: 16px;
     }
 
-    /* CREDENCIAL OFICIAL */
     .carnet-wrapper {
       width: 100%;
       border-radius: 18px;
@@ -60,7 +59,6 @@
       display: block;
     }
 
-    /* PANEL CARPETA VIRTUAL */
     .panel {
       background: rgba(10, 25, 47, 0.85);
       border: 1px solid var(--border-gold);
@@ -142,11 +140,10 @@
       display: none;
     }
 
-    /* LISTA DE ARCHIVOS */
     .section-title {
       font-size: 12px;
       color: var(--gold-light);
-      margin: 14px 0 8px;
+      margin: 16px 0 8px;
       font-weight: 700;
       text-transform: uppercase;
       letter-spacing: 1px;
@@ -165,38 +162,106 @@
       margin-bottom: 6px;
     }
 
+    /* ACORDEÓN DE EXPEDIENTES POR BENEFACTOR */
+    .carpeta-programa {
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid var(--border-gold);
+      border-radius: 12px;
+      overflow: hidden;
+      margin-bottom: 10px;
+    }
+
+    .carpeta-header {
+      padding: 14px;
+      background: rgba(212, 175, 55, 0.08);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      cursor: pointer;
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--gold-light);
+      user-select: none;
+    }
+
+    .carpeta-header:hover {
+      background: rgba(212, 175, 55, 0.16);
+    }
+
+    .carpeta-header .icono-flecha {
+      transition: transform 0.3s ease;
+      font-size: 14px;
+      color: var(--gold);
+    }
+
+    .carpeta-programa.abierta .carpeta-header .icono-flecha {
+      transform: rotate(90deg);
+    }
+
+    .carpeta-contenido {
+      display: none;
+      padding: 10px;
+      flex-direction: column;
+      gap: 8px;
+      background: rgba(3, 13, 26, 0.6);
+      border-top: 1px solid rgba(212, 175, 55, 0.15);
+    }
+
+    .carpeta-programa.abierta .carpeta-contenido {
+      display: flex;
+    }
+
+    .sub-seccion-label {
+      font-size: 11px;
+      font-weight: 700;
+      color: #94a3b8;
+      text-transform: uppercase;
+      margin: 4px 0 2px 4px;
+    }
+
+    /* ESTILOS DE DOCUMENTO */
     .doc-item {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      padding: 12px 14px;
-      border-radius: 10px;
-      background: rgba(255, 255, 255, 0.05);
-      border: 1px solid rgba(212, 175, 55, 0.3);
+      padding: 10px 12px;
+      border-radius: 8px;
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(212, 175, 55, 0.2);
       color: #f1f5f9;
-      font-size: 13px;
+      font-size: 12.5px;
       font-weight: 600;
       text-decoration: none;
-      cursor: pointer;
       transition: all 0.2s ease;
       width: 100%;
       text-align: left;
     }
 
-    .doc-item:hover, .doc-item:active {
+    .doc-item.disponible {
+      cursor: pointer;
+    }
+
+    .doc-item.disponible:hover {
       background: rgba(212, 175, 55, 0.15);
       border-color: var(--gold);
+    }
+
+    .doc-item.no-disponible {
+      background: rgba(255, 255, 255, 0.015);
+      border: 1px dashed rgba(148, 163, 184, 0.25);
+      color: #64748b;
+      cursor: not-allowed;
     }
 
     .doc-left {
       display: flex;
       align-items: center;
-      gap: 10px;
+      gap: 8px;
     }
 
     .badge-tipo {
-      font-size: 10px;
-      padding: 2px 6px;
+      font-size: 9px;
+      padding: 2px 5px;
       border-radius: 4px;
       font-weight: 700;
       flex-shrink: 0;
@@ -212,12 +277,17 @@
       color: #fca5a5;
     }
 
-    .doc-arrow {
-      color: var(--gold);
-      font-size: 16px;
+    .badge-pendiente {
+      background: rgba(234, 179, 8, 0.15);
+      color: #facc15;
+      border: 1px solid rgba(234, 179, 8, 0.4);
     }
 
-    /* BOTONES INFERIORES */
+    .doc-arrow {
+      color: var(--gold);
+      font-size: 15px;
+    }
+
     .btn-reporte {
       width: 100%;
       margin-top: 18px;
@@ -265,7 +335,6 @@
       display: none !important;
     }
 
-    /* MODALES */
     .modal {
       position: fixed;
       top: 0;
@@ -321,7 +390,6 @@
       box-shadow: 0 8px 25px rgba(0,0,0,0.7);
     }
 
-    /* Cuadros de Diálogo */
     .modal-dialog {
       background: #0a192f;
       border: 1px solid var(--gold);
@@ -370,15 +438,12 @@
 
 <div class="container">
 
-  <!-- CREDENCIAL OFICIAL -->
   <div class="carnet-wrapper">
     <img src="fondo-carnet.png" alt="Credencial Trascendiendo Fronteras" class="carnet-bg">
   </div>
 
-  <!-- PANEL CARPETA VIRTUAL -->
   <div class="panel">
     
-    <!-- Bloque PIN -->
     <div id="pinView" class="pin-box">
       <h3>📁 CARPETA VIRTUAL</h3>
       <p>Ingrese el PIN para ver los soportes oficiales.</p>
@@ -387,21 +452,17 @@
       <button class="btn-verify" onclick="validarPIN()">Acceder a Soportes</button>
       <div id="errorText" class="error-msg">PIN incorrecto. Intente de nuevo.</div>
       
-      <!-- Enlace para recuperar PIN -->
       <div>
         <button class="btn-link-recuperar" onclick="abrirModalRecuperacion()">¿Olvidó su PIN?</button>
       </div>
     </div>
 
-    <!-- Lista de Archivos -->
     <div id="docsView" class="hidden">
       
-      <!-- 1. IDENTIDAD (IMÁGENES) -->
+      <!-- 1. IDENTIDAD -->
       <div class="section-title">Documentos de Identidad</div>
       <div class="docs-list">
-
-        <!-- Cédula -->
-        <button id="btnCedula" class="doc-item" onclick="abrirVisor('Cédula de Ciudadanía', 'cedula.jpg')">
+        <button id="btnCedula" class="doc-item disponible" onclick="abrirVisor('Cédula de Ciudadanía', 'cedula.jpg')">
           <div class="doc-left">
             <span>🪪</span>
             <span>Cédula de Ciudadanía</span>
@@ -410,8 +471,7 @@
           <span class="doc-arrow">›</span>
         </button>
 
-        <!-- Pasaporte -->
-        <button id="btnPasaporte" class="doc-item" onclick="abrirVisor('Pasaporte Vigente', 'pasaporte.jpg')">
+        <button id="btnPasaporte" class="doc-item disponible" onclick="abrirVisor('Pasaporte Vigente', 'pasaporte.jpg')">
           <div class="doc-left">
             <span>✈</span>
             <span>Pasaporte Oficial</span>
@@ -419,113 +479,16 @@
           </div>
           <span class="doc-arrow">›</span>
         </button>
-
       </div>
 
-      <!-- 2. PARTICIPACIONES (NUEVOS PROGRAMAS) -->
-      <div class="section-title" id="secParticipacionesTitulo">Participaciones</div>
-      <div class="docs-list">
+      <!-- 2. EXPEDIENTES POR BENEFACTOR / PROGRAMA -->
+      <div class="section-title" id="secCarpetasTitulo">Expedientes por Benefactor</div>
+      <div id="contenedorCarpetas"></div>
 
-        <!-- Benefactor A -->
-        <a id="btnBenefactorA" href="benefactor_a.pdf" target="_blank" class="doc-item">
-          <div class="doc-left">
-            <span>💎</span>
-            <span>Benefactor A</span>
-            <span class="badge-tipo badge-pdf">PDF</span>
-          </div>
-          <span class="doc-arrow">›</span>
-        </a>
-
-        <!-- Benefactor B -->
-        <a id="btnBenefactorB" href="benefactor_b.pdf" target="_blank" class="doc-item">
-          <div class="doc-left">
-            <span>💎</span>
-            <span>Benefactor B</span>
-            <span class="badge-tipo badge-pdf">PDF</span>
-          </div>
-          <span class="doc-arrow">›</span>
-        </a>
-
-        <!-- Benefactor X -->
-        <a id="btnBenefactorX" href="benefactor_x.pdf" target="_blank" class="doc-item">
-          <div class="doc-left">
-            <span>⭐</span>
-            <span>Benefactor X</span>
-            <span class="badge-tipo badge-pdf">PDF</span>
-          </div>
-          <span class="doc-arrow">›</span>
-        </a>
-
-        <!-- Plan 600 -->
-        <a id="btnPlan600" href="plan_600.pdf" target="_blank" class="doc-item">
-          <div class="doc-left">
-            <span>📈</span>
-            <span>Plan 600</span>
-            <span class="badge-tipo badge-pdf">PDF</span>
-          </div>
-          <span class="doc-arrow">›</span>
-        </a>
-
-        <!-- Otros Programas -->
-        <a id="btnOtrosProgramas" href="otros_programas.pdf" target="_blank" class="doc-item">
-          <div class="doc-left">
-            <span>📂</span>
-            <span>Otros Programas</span>
-            <span class="badge-tipo badge-pdf">PDF</span>
-          </div>
-          <span class="doc-arrow">›</span>
-        </a>
-
-      </div>
-
-      <!-- 3. DOCUMENTOS LEGALES -->
-      <div class="section-title">Documentos Legales</div>
-      <div class="docs-list">
-
-        <a href="nda.pdf" target="_blank" class="doc-item">
-          <div class="doc-left">
-            <span>📜</span>
-            <span>Acuerdo NDA</span>
-            <span class="badge-tipo badge-pdf">PDF</span>
-          </div>
-          <span class="doc-arrow">›</span>
-        </a>
-
-        <a href="cis.pdf" target="_blank" class="doc-item">
-          <div class="doc-left">
-            <span>🛡️</span>
-            <span>CIS</span>
-            <span class="badge-tipo badge-pdf">PDF</span>
-          </div>
-          <span class="doc-arrow">›</span>
-        </a>
-
-        <a href="w8.pdf" target="_blank" class="doc-item">
-          <div class="doc-left">
-            <span>📑</span>
-            <span>W-8BEN</span>
-            <span class="badge-tipo badge-pdf">PDF</span>
-          </div>
-          <span class="doc-arrow">›</span>
-        </a>
-
-        <a href="ddr.pdf" target="_blank" class="doc-item">
-          <div class="doc-left">
-            <span>💼</span>
-            <span>Reporte DDR</span>
-            <span class="badge-tipo badge-pdf">PDF</span>
-          </div>
-          <span class="doc-arrow">›</span>
-        </a>
-
-      </div>
-
-      <!-- BOTÓN PARA GENERAR REPORTE COMPLETO -->
       <button class="btn-reporte" onclick="generarReporte()">
-        <span>📥</span> Descargar Reporte (PDF)
+        <span>📥</span> Descargar Reporte Completo (PDF)
       </button>
 
-      <!-- BOTÓN PARA CAMBIAR CLAVE EN CUALQUIER MOMENTO -->
       <button class="btn-cambiar-clave-secundario" onclick="mostrarModalCambioPIN(false)">
         🔑 Cambiar mi PIN de acceso
       </button>
@@ -540,7 +503,7 @@
 
 </div>
 
-<!-- MODAL VISOR DE FOTOS -->
+<!-- MODALES -->
 <div id="modalVisor" class="modal hidden">
   <div class="modal-header">
     <div id="modalTitulo" class="modal-title">Documento</div>
@@ -551,7 +514,6 @@
   </div>
 </div>
 
-<!-- MODAL CAMBIO DE PIN -->
 <div id="modalCambioPIN" class="modal hidden">
   <div class="modal-dialog">
     <h3 id="tituloCambioPIN">🔐 Asignar Nuevo PIN</h3>
@@ -565,7 +527,6 @@
   </div>
 </div>
 
-<!-- MODAL RECUPERACIÓN DE CLAVE POR CÉDULA -->
 <div id="modalRecuperacion" class="modal hidden">
   <div class="modal-dialog">
     <h3>🛡️ Recuperar Acceso</h3>
@@ -581,62 +542,195 @@
 </div>
 
 <script>
-  // PIN inicial por defecto asignado al titular
   const PIN_POR_DEFECTO = "1234";
 
-  // DATOS DEL TITULAR[cite: 5]
   const DATOS_TITULAR = {
     nombre: "MARTHA GLADYS VARGAS BELTRAN",
     identificacion: "66824466",
-    entidad: "TRASCENDIENDO FRONTERAS - GEMMA Y NUBIA",
+    entidad: "FUNDACION NUEVO MUNDO FBM",
     estado: "VERIFICADO / ACTIVO"
   };
 
-  // Retorna el PIN activo
+  // PROGRAMAS VISIBLES PARA ESTE TITULAR (true = carpeta visible / false = oculta)
+  const PROGRAMAS_ACTIVOS = {
+    tienePasaporte: true,
+    benefactorA: true,
+    benefactorB: true,
+    benefactorX: true,
+    alianza: true,
+    plan600: true,
+    otrosProgramas: false
+  };
+
+  // CADA PROGRAMA CONTIENE EXCLUSIVAMENTE SUS 4 ARCHIVOS (VOUCHER, NDA, CIS, DDR)
+  const EXPEDIENTES_PROGRAMAS = [
+    {
+      id: 'benefactorA',
+      nombre: 'Expediente Benefactor A',
+      icono: '💎',
+      voucher: { nombre: 'Voucher y Soportes de Aporte', archivo: 'vouchers_benefactor_a.pdf', disponible: true },
+      legales: [
+        { nombre: 'Acuerdo NDA - Benefactor A', archivo: 'nda_benefactor_a.pdf', disponible: false },
+        { nombre: 'CIS - Benefactor A', archivo: 'cis_benefactor_a.pdf', disponible: true },
+        { nombre: 'Reporte DDR - Benefactor A', archivo: 'ddr_benefactor_a.pdf', disponible: false }
+      ]
+    },
+    {
+      id: 'benefactorB',
+      nombre: 'Expediente Benefactor B',
+      icono: '💎',
+      voucher: { nombre: 'Voucher y Soportes de Aporte', archivo: 'vouchers_benefactor_b.pdf', disponible: true },
+      legales: [
+        { nombre: 'Acuerdo NDA - Benefactor B', archivo: 'nda_benefactor_b.pdf', disponible: false },
+        { nombre: 'CIS - Benefactor B', archivo: 'cis_benefactor_b.pdf', disponible: false }, // En trámite
+        { nombre: 'Reporte DDR - Benefactor B', archivo: 'ddr_benefactor_b.pdf', disponible: false }  // En trámite
+      ]
+    },
+    {
+      id: 'benefactorX',
+      nombre: 'Expediente Benefactor X',
+      icono: '⭐',
+      voucher: { nombre: 'Voucher y Soportes de Aporte', archivo: 'vouchers_benefactor_x.pdf', disponible: true },
+      legales: [
+        { nombre: 'Acuerdo NDA - Benefactor X', archivo: 'nda_benefactor_x.pdf', disponible: false },
+        { nombre: 'CIS - Benefactor X', archivo: 'cis_benefactor_x.pdf', disponible: false },
+        { nombre: 'Reporte DDR - Benefactor X', archivo: 'ddr_benefactor_x.pdf', disponible: false }
+      ]
+    },
+    {
+      id: 'alianza',
+      nombre: 'Expediente Programa La Alianza',
+      icono: '🤝',
+      voucher: { nombre: 'Voucher y Soportes de Aporte', archivo: 'vouchers_alianza.pdf', disponible: false },
+      legales: [
+        { nombre: 'Acuerdo NDA - La Alianza', archivo: 'nda_alianza.pdf', disponible: true },
+        { nombre: 'CIS - La Alianza', archivo: 'cis_alianza.pdf', disponible: false },
+        { nombre: 'Reporte DDR - La Alianza', archivo: 'ddr_alianza.pdf', disponible: false }
+      ]
+    },
+    {
+      id: 'plan600',
+      nombre: 'Expediente Plan 600',
+      icono: '📈',
+      voucher: { nombre: 'Voucher y Soportes de Aporte', archivo: 'vouchers_plan_600.pdf', disponible: true },
+      legales: [
+        { nombre: 'Acuerdo NDA - Plan 600', archivo: 'nda_plan_600.pdf', disponible: false },
+        { nombre: 'CIS - Plan 600', archivo: 'cis_plan_600.pdf', disponible: false },
+        { nombre: 'Reporte DDR - Plan 600', archivo: 'ddr_plan_600.pdf', disponible: false }
+      ]
+    },
+    {
+      id: 'La Herencia',
+      nombre: 'Expediente La Herencia',
+      icono: '📂',
+      voucher: { nombre: 'Voucher y Soportes de Aporte', archivo: 'vouchers_la_herencia.pdf', disponible: false },
+      legales: [
+        { nombre: 'Acuerdo NDA - Otros Programas', archivo: 'nda_la_herencia.pdf', disponible: true },
+        { nombre: 'CIS - la_herencia', archivo: 'cis_la_herencia.pdf', disponible: false },
+        { nombre: 'Reporte DDR - la_herencia', archivo: 'ddr_la_herencia.pdf', disponible: false }
+      ]
+    }
+  ];
+
   function obtenerPinActivo() {
     return localStorage.getItem("tf_pin_usuario") || PIN_POR_DEFECTO;
   }
 
-  // CONFIGURACIÓN DE VISIBILIDAD DE DOCUMENTOS (Activa con true o desactiva con false)
-  const DOCUMENTOS_ACTIVOS = {
-    tienePasaporte: true,
-    tieneBenefactorA: true,
-    tieneBenefactorB: true,
-    tieneBenefactorX: true,
-    tienePlan600: true,
-    tieneOtrosProgramas: false
-  };
-
-  function aplicarConfiguracionDocumentos() {
+  function renderizarCarpetas() {
     const elPasaporte = document.getElementById("btnPasaporte");
-    if (elPasaporte && !DOCUMENTOS_ACTIVOS.tienePasaporte) {
+    if (elPasaporte && !PROGRAMAS_ACTIVOS.tienePasaporte) {
       elPasaporte.classList.add("hidden");
     }
 
-    const elBenA = document.getElementById("btnBenefactorA");
-    const elBenB = document.getElementById("btnBenefactorB");
-    const elBenX = document.getElementById("btnBenefactorX");
-    const elP600 = document.getElementById("btnPlan600");
-    const elOtros = document.getElementById("btnOtrosProgramas");
-    const elTitulo = document.getElementById("secParticipacionesTitulo");
+    const contenedor = document.getElementById("contenedorCarpetas");
+    contenedor.innerHTML = "";
+    let totalCarpetasVisibles = 0;
 
-    if (elBenA && !DOCUMENTOS_ACTIVOS.tieneBenefactorA) elBenA.classList.add("hidden");
-    if (elBenB && !DOCUMENTOS_ACTIVOS.tieneBenefactorB) elBenB.classList.add("hidden");
-    if (elBenX && !DOCUMENTOS_ACTIVOS.tieneBenefactorX) elBenX.classList.add("hidden");
-    if (elP600 && !DOCUMENTOS_ACTIVOS.tienePlan600) elP600.classList.add("hidden");
-    if (elOtros && !DOCUMENTOS_ACTIVOS.tieneOtrosProgramas) elOtros.classList.add("hidden");
+    EXPEDIENTES_PROGRAMAS.forEach((prog) => {
+      if (PROGRAMAS_ACTIVOS[prog.id]) {
+        totalCarpetasVisibles++;
 
-    // Si no tiene ningún programa activo en participaciones, oculta el encabezado de sección
-    const tieneAlgunaParticipacion = (
-      DOCUMENTOS_ACTIVOS.tieneBenefactorA ||
-      DOCUMENTOS_ACTIVOS.tieneBenefactorB ||
-      DOCUMENTOS_ACTIVOS.tieneBenefactorX ||
-      DOCUMENTOS_ACTIVOS.tienePlan600 ||
-      DOCUMENTOS_ACTIVOS.tieneOtrosProgramas
-    );
+        // Renderizado del Voucher
+        let voucherHTML = '';
+        if (prog.voucher.disponible) {
+          voucherHTML = `
+            <a href="${prog.voucher.archivo}" target="_blank" class="doc-item disponible">
+              <div class="doc-left">
+                <span>📑</span>
+                <span>${prog.voucher.nombre}</span>
+                <span class="badge-tipo badge-pdf">PDF</span>
+              </div>
+              <span class="doc-arrow">›</span>
+            </a>
+          `;
+        } else {
+          voucherHTML = `
+            <div class="doc-item no-disponible">
+              <div class="doc-left">
+                <span>📑</span>
+                <span>${prog.voucher.nombre}</span>
+                <span class="badge-tipo badge-pendiente">PENDIENTE</span>
+              </div>
+              <span style="font-size: 11px; color: #94a3b8;">En trámite</span>
+            </div>
+          `;
+        }
 
-    if (elTitulo && !tieneAlgunaParticipacion) {
-      elTitulo.classList.add("hidden");
+        // Renderizado de Legales (NDA, CIS, DDR)
+        let itemsLegalesHTML = '';
+        prog.legales.forEach(leg => {
+          if (leg.disponible) {
+            itemsLegalesHTML += `
+              <a href="${leg.archivo}" target="_blank" class="doc-item disponible">
+                <div class="doc-left">
+                  <span>📜</span>
+                  <span>${leg.nombre}</span>
+                  <span class="badge-tipo badge-pdf">PDF</span>
+                </div>
+                <span class="doc-arrow">›</span>
+              </a>
+            `;
+          } else {
+            itemsLegalesHTML += `
+              <div class="doc-item no-disponible">
+                <div class="doc-left">
+                  <span>📜</span>
+                  <span>${leg.nombre}</span>
+                  <span class="badge-tipo badge-pendiente">NO DISPONIBLE</span>
+                </div>
+                <span style="font-size: 11px; color: #94a3b8;">En gestión</span>
+              </div>
+            `;
+          }
+        });
+
+        contenedor.innerHTML += `
+          <div class="carpeta-programa" id="carpeta_${prog.id}">
+            <div class="carpeta-header" onclick="toggleCarpeta('carpeta_${prog.id}')">
+              <span>${prog.icono} ${prog.nombre}</span>
+              <span class="icono-flecha">▶</span>
+            </div>
+            <div class="carpeta-contenido">
+              <span class="sub-seccion-label">🧾 Soporte de Pago:</span>
+              ${voucherHTML}
+
+              <span class="sub-seccion-label" style="margin-top: 6px;">⚖️ Documentos Legales:</span>
+              ${itemsLegalesHTML}
+            </div>
+          </div>
+        `;
+      }
+    });
+
+    if (totalCarpetasVisibles === 0) {
+      document.getElementById("secCarpetasTitulo").classList.add("hidden");
+    }
+  }
+
+  function toggleCarpeta(id) {
+    const carpeta = document.getElementById(id);
+    if (carpeta) {
+      carpeta.classList.toggle("abierta");
     }
   }
 
@@ -648,7 +742,6 @@
 
     if (pinIngresado === pinActual) {
       if (error) error.style.display = "none";
-      
       const yaCambioClave = localStorage.getItem("tf_pin_cambiado");
       if (!yaCambioClave) {
         mostrarModalCambioPIN(true);
@@ -669,10 +762,9 @@
 
     if (pinView) pinView.classList.add("hidden");
     if (docsView) docsView.classList.remove("hidden");
-    aplicarConfiguracionDocumentos();
+    renderizarCarpetas();
   }
 
-  // GESTIÓN DE MODAL DE CAMBIO DE PIN
   function mostrarModalCambioPIN(esObligatorio) {
     const modal = document.getElementById("modalCambioPIN");
     const titulo = document.getElementById("tituloCambioPIN");
@@ -721,7 +813,6 @@
     desbloquearAcceso();
   }
 
-  // GESTIÓN DE RECUPERACIÓN DE CLAVE
   function abrirModalRecuperacion() {
     const modal = document.getElementById("modalRecuperacion");
     const input = document.getElementById("inputDocRecuperar");
@@ -744,11 +835,8 @@
 
     if (docIngresado === DATOS_TITULAR.identificacion.trim()) {
       cerrarModalRecuperacion();
-
-      // Limpia la clave anterior y abre el asistente de cambio
       localStorage.removeItem("tf_pin_usuario");
       localStorage.removeItem("tf_pin_cambiado");
-
       mostrarModalCambioPIN(true);
     } else {
       if (error) {
@@ -798,48 +886,65 @@
     }
   });
 
-  // GENERAR REPORTE PDF
+  // REPORTE PDF EXCLUSIVO POR BENEFACTOR
   function generarReporte() {
     const fecha = new Date().toLocaleDateString("es-CO", { year: 'numeric', month: 'long', day: 'numeric' });
     const rutaBase = window.location.href.split('?')[0].split('#')[0];
     const urlBase = rutaBase.substring(0, rutaBase.lastIndexOf('/') + 1);
 
-    const listaDocumentos = [
-      { nombre: "Cédula de Ciudadanía (Soporte biométrico)", archivo: "cedula.jpg", tipo: "IMAGEN", visible: true },
-      { nombre: "Pasaporte Oficial Vigente", archivo: "pasaporte.jpg", tipo: "IMAGEN", visible: DOCUMENTOS_ACTIVOS.tienePasaporte },
-      { nombre: "Programa Benefactor A", archivo: "benefactor_a.pdf", tipo: "PDF", visible: DOCUMENTOS_ACTIVOS.tieneBenefactorA },
-      { nombre: "Programa Benefactor B", archivo: "benefactor_b.pdf", tipo: "PDF", visible: DOCUMENTOS_ACTIVOS.tieneBenefactorB },
-      { nombre: "Programa Benefactor X", archivo: "benefactor_x.pdf", tipo: "PDF", visible: DOCUMENTOS_ACTIVOS.tieneBenefactorX },
-      { nombre: "Programa Plan 600", archivo: "plan_600.pdf", tipo: "PDF", visible: DOCUMENTOS_ACTIVOS.tienePlan600 },
-      { nombre: "Otros Programas Asignados", archivo: "otros_programas.pdf", tipo: "PDF", visible: DOCUMENTOS_ACTIVOS.tieneOtrosProgramas },
-      { nombre: "Acuerdo de Confidencialidad (NDA)", archivo: "nda.pdf", tipo: "PDF", visible: true },
-      { nombre: "CIS", archivo: "cis.pdf", tipo: "PDF", visible: true },
-      { nombre: "W-8BEN", archivo: "w8.pdf", tipo: "PDF", visible: true },
-      { nombre: "DDR", archivo: "ddr.pdf", tipo: "PDF", visible: true }
+    const listaReporte = [
+      { categoria: "Identidad", nombre: "Cédula de Ciudadanía (Soporte biométrico)", archivo: "cedula.jpg", disponible: true },
+      { categoria: "Identidad", nombre: "Pasaporte Oficial Vigente", archivo: "pasaporte.jpg", disponible: PROGRAMAS_ACTIVOS.tienePasaporte }
     ];
+
+    EXPEDIENTES_PROGRAMAS.forEach(prog => {
+      if (PROGRAMAS_ACTIVOS[prog.id]) {
+        listaReporte.push({
+          categoria: prog.nombre,
+          nombre: `${prog.voucher.nombre} (${prog.nombre})`,
+          archivo: prog.voucher.archivo,
+          disponible: prog.voucher.disponible
+        });
+
+        prog.legales.forEach(leg => {
+          listaReporte.push({
+            categoria: prog.nombre,
+            nombre: leg.nombre,
+            archivo: leg.archivo,
+            disponible: leg.disponible
+          });
+        });
+      }
+    });
 
     let filasTabla = '';
 
-    listaDocumentos.forEach(function(doc) {
-      if (doc.visible) {
-        const linkCompleto = urlBase + doc.archivo;
-        const colorTipo = doc.tipo === 'PDF' ? '#fee2e2; color: #991b1b;' : '#dbeafe; color: #1e40af;';
-        filasTabla += `
-          <tr>
-            <td style="padding: 10px 12px; border: 1px solid #cbd5e1; font-weight: 600; color: #1e293b;">
-              ✓ ${doc.nombre}
-            </td>
-            <td style="padding: 10px 12px; border: 1px solid #cbd5e1; text-align: center;">
-              <span style="font-size: 11px; font-weight: 700; padding: 3px 8px; border-radius: 4px; background: ${colorTipo}">${doc.tipo}</span>
-            </td>
-            <td style="padding: 10px 12px; border: 1px solid #cbd5e1; text-align: center;">
-              <a href="${linkCompleto}" target="_blank" download="${doc.archivo}" style="display: inline-block; background: #0a192f; color: #fef08a; text-decoration: none; font-weight: 700; font-size: 12px; padding: 6px 14px; border-radius: 6px; border: 1px solid #d4af37;">
-                📥 Descargar Archivo
-              </a>
-            </td>
-          </tr>
-        `;
-      }
+    listaReporte.forEach(function(doc) {
+      const linkCompleto = urlBase + doc.archivo;
+      const badgeEstado = doc.disponible 
+        ? `<span style="font-size: 10.5px; font-weight: 700; padding: 3px 8px; border-radius: 4px; background: #dcfce7; color: #166534;">✓ DISPONIBLE</span>`
+        : `<span style="font-size: 10.5px; font-weight: 700; padding: 3px 8px; border-radius: 4px; background: #fef9c3; color: #854d0e;">⏳ EN GESTIÓN</span>`;
+      
+      const botonAccion = doc.disponible
+        ? `<a href="${linkCompleto}" target="_blank" download="${doc.archivo}" style="display: inline-block; background: #0a192f; color: #fef08a; text-decoration: none; font-weight: 700; font-size: 11px; padding: 5px 12px; border-radius: 6px; border: 1px solid #d4af37;">📥 Descargar</a>`
+        : `<span style="color: #94a3b8; font-size: 11px; font-style: italic;">No disponible aún</span>`;
+
+      filasTabla += `
+        <tr>
+          <td style="padding: 9px 12px; border: 1px solid #cbd5e1; font-size: 11px; font-weight: 700; color: #64748b;">
+            ${doc.categoria}
+          </td>
+          <td style="padding: 9px 12px; border: 1px solid #cbd5e1; font-weight: 600; color: ${doc.disponible ? '#1e293b' : '#64748b'};">
+            ${doc.nombre}
+          </td>
+          <td style="padding: 9px 12px; border: 1px solid #cbd5e1; text-align: center;">
+            ${badgeEstado}
+          </td>
+          <td style="padding: 9px 12px; border: 1px solid #cbd5e1; text-align: center;">
+            ${botonAccion}
+          </td>
+        </tr>
+      `;
     });
 
     const reporteHTML = `
@@ -851,10 +956,10 @@
         <style>
           * { box-sizing: border-box; }
           body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif; color: #0f172a; margin: 0; padding: 20px; background: #f8fafc; }
-          .top-bar { max-width: 820px; margin: 0 auto 16px; background: #0a192f; border: 1px solid #d4af37; border-radius: 10px; padding: 14px 20px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 4px 15px rgba(0,0,0,0.25); }
+          .top-bar { max-width: 860px; margin: 0 auto 16px; background: #0a192f; border: 1px solid #d4af37; border-radius: 10px; padding: 14px 20px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 4px 15px rgba(0,0,0,0.25); }
           .top-bar-title { color: #fef08a; font-size: 14px; font-weight: 700; }
           .btn-save-pdf { background: linear-gradient(135deg, #d4af37 0%, #aa820a 100%); color: #000; border: none; padding: 10px 20px; font-size: 13px; font-weight: 800; border-radius: 6px; cursor: pointer; text-transform: uppercase; letter-spacing: 0.5px; }
-          .paper { max-width: 820px; margin: 0 auto; background: #ffffff; border: 1px solid #cbd5e1; border-radius: 12px; padding: 35px; box-shadow: 0 4px 20px rgba(0,0,0,0.06); }
+          .paper { max-width: 860px; margin: 0 auto; background: #ffffff; border: 1px solid #cbd5e1; border-radius: 12px; padding: 35px; box-shadow: 0 4px 20px rgba(0,0,0,0.06); }
           .header { display: flex; justify-content: space-between; align-items: flex-end; border-bottom: 2px solid #d4af37; padding-bottom: 15px; margin-bottom: 25px; }
           .header h1 { font-size: 20px; color: #0a192f; margin: 0 0 4px; text-transform: uppercase; }
           .header h2 { font-size: 13px; color: #854d0e; margin: 0; letter-spacing: 0.5px; }
@@ -863,8 +968,8 @@
           .table-info td { padding: 9px 12px; border: 1px solid #e2e8f0; }
           .table-info td.lbl { background: #f8fafc; font-weight: 700; width: 32%; color: #475569; }
           .sec-title { font-size: 14px; font-weight: 800; color: #0a192f; border-bottom: 1.5px solid #d4af37; padding-bottom: 6px; margin: 25px 0 15px; text-transform: uppercase; }
-          .table-docs { width: 100%; border-collapse: collapse; font-size: 13px; margin-bottom: 25px; }
-          .table-docs th { background: #0a192f; color: #ffffff; padding: 10px 12px; text-align: left; font-size: 12px; text-transform: uppercase; }
+          .table-docs { width: 100%; border-collapse: collapse; font-size: 12px; margin-bottom: 25px; }
+          .table-docs th { background: #0a192f; color: #ffffff; padding: 10px 12px; text-align: left; font-size: 11px; text-transform: uppercase; }
           .note-box { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 12px 16px; font-size: 12px; color: #475569; margin-bottom: 25px; line-height: 1.5; }
           .footer { border-top: 1px solid #e2e8f0; padding-top: 14px; font-size: 11px; color: #64748b; text-align: center; }
           @media print {
@@ -876,14 +981,14 @@
       </head>
       <body>
         <div class="top-bar">
-          <span class="top-bar-title">📄 REPORTE DE EXPEDIENTE</span>
+          <span class="top-bar-title">📄 REPORTE DE EXPEDIENTE INTEGRAL</span>
           <button class="btn-save-pdf" onclick="window.print()">📥 Descargar Reporte en PDF</button>
         </div>
         <div class="paper">
           <div class="header">
             <div>
               <h1>${DATOS_TITULAR.entidad}</h1>
-              <h2>REPORTE OFICIAL Y DESCARGA DE ARCHIVOS</h2>
+              <h2>REPORTE OFICIAL Y AUDITORÍA DE SOPORTES</h2>
             </div>
             <div class="badge-status">${DATOS_TITULAR.estado}</div>
           </div>
@@ -906,15 +1011,16 @@
             </tr>
           </table>
           <div class="note-box">
-            💡 <strong>Instrucciones:</strong> Este documento es un índice activo. Al abrir este reporte descargado en cualquier dispositivo o lector PDF, haga clic sobre el botón <strong>"Descargar Archivo"</strong> de cualquier soporte para descargarlo o abrirlo automáticamente en alta resolución desde el servidor seguro.
+            💡 <strong>Instrucciones:</strong> Este documento audita el estado actual del expediente. Los archivos marcados como <strong>DISPONIBLE</strong> pueden descargarse directamente haciendo clic en su botón correspondiente. Los marcados como <strong>EN GESTIÓN</strong> se encuentran en proceso de emisión institucional.
           </div>
-          <div class="sec-title">Enlaces Directos de Descarga:</div>
+          <div class="sec-title">Estado de Soportes por Benefactor:</div>
           <table class="table-docs">
             <thead>
               <tr>
-                <th>Documento Oficial</th>
-                <th style="text-align: center;">Tipo</th>
-                <th style="text-align: center;">Botón de Descarga</th>
+                <th style="width: 24%;">Expediente</th>
+                <th>Documento</th>
+                <th style="text-align: center; width: 16%;">Estado</th>
+                <th style="text-align: center; width: 20%;">Acción</th>
               </tr>
             </thead>
             <tbody>
@@ -922,7 +1028,7 @@
             </tbody>
           </table>
           <div class="footer">
-            🔒 Certificado de autenticidad institucional emitido por la Plataforma Oficial Trascendiendo Fronteras.
+            🔒 Certificado institucional emitido por la Plataforma Oficial Trascendiendo Fronteras.
           </div>
         </div>
       </body>
