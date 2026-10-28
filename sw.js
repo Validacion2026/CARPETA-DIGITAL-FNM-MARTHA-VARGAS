@@ -31,11 +31,11 @@ const ARCHIVOS_OFFLINE = [
   './nda_plan_600.pdf',
   './cis_plan_600.pdf',
   './ddr_plan_600.pdf',
-  // Otros Programas
-  './vouchers_otros.pdf',
-  './nda_otros.pdf',
-  './cis_otros.pdf',
-  './ddr_otros.pdf'
+  // La Herencia
+  './vouchers_la_herencia.pdf',
+  './nda_la_herencia.pdf',
+  './cis_la_herencia.pdf',
+  './ddr_la_herencia.pdf'
 ];
 
 self.addEventListener('install', event => {
