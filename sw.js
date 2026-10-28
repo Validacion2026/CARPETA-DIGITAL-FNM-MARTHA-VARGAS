@@ -1,4 +1,4 @@
-const CACHE_NAME = 'carpeta-virtual-v4';
+const CACHE_NAME = 'carpeta-virtual-v1';
 const ARCHIVOS_OFFLINE = [
   './',
   './index.html',
@@ -6,7 +6,6 @@ const ARCHIVOS_OFFLINE = [
   './fondo-carnet.png',
   './cedula.jpg',
   './pasaporte.jpg',
-  './w8.pdf',
   // Benefactor A
   './vouchers_benefactor_a.pdf',
   './nda_benefactor_a.pdf',
@@ -45,7 +44,7 @@ self.addEventListener('install', event => {
     caches.open(CACHE_NAME).then(cache => {
       return Promise.all(
         ARCHIVOS_OFFLINE.map(url => {
-          return cache.add(url).catch(err => console.log('Omitido:', url));
+          return cache.add(url).catch(err => console.log('Omitido o pendiente:', url));
         })
       );
     })
