@@ -1,4 +1,4 @@
-const CACHE_NAME = 'carpeta-virtual-v1'; // Versión actualizada para refrescar la caché
+const CACHE_NAME = 'carpeta-virtual-v4';
 const ARCHIVOS_OFFLINE = [
   './',
   './index.html',
@@ -6,18 +6,39 @@ const ARCHIVOS_OFFLINE = [
   './fondo-carnet.png',
   './cedula.jpg',
   './pasaporte.jpg',
-  './benefactor_a.pdf',
-  './benefactor_b.pdf',
-  './benefactor_x.pdf',
-  './plan_600.pdf',
-  './otros_programas.pdf',
-  './nda.pdf',
-  './cis.pdf',
   './w8.pdf',
-  './ddr.pdf'
+  // Benefactor A
+  './vouchers_benefactor_a.pdf',
+  './nda_benefactor_a.pdf',
+  './cis_benefactor_a.pdf',
+  './ddr_benefactor_a.pdf',
+  // Benefactor B
+  './vouchers_benefactor_b.pdf',
+  './nda_benefactor_b.pdf',
+  './cis_benefactor_b.pdf',
+  './ddr_benefactor_b.pdf',
+  // Benefactor X
+  './vouchers_benefactor_x.pdf',
+  './nda_benefactor_x.pdf',
+  './cis_benefactor_x.pdf',
+  './ddr_benefactor_x.pdf',
+  // La Alianza
+  './vouchers_alianza.pdf',
+  './nda_alianza.pdf',
+  './cis_alianza.pdf',
+  './ddr_alianza.pdf',
+  // Plan 600
+  './vouchers_plan_600.pdf',
+  './nda_plan_600.pdf',
+  './cis_plan_600.pdf',
+  './ddr_plan_600.pdf',
+  // Otros Programas
+  './vouchers_otros.pdf',
+  './nda_otros.pdf',
+  './cis_otros.pdf',
+  './ddr_otros.pdf'
 ];
 
-// Al instalar, toma el control de inmediato
 self.addEventListener('install', event => {
   self.skipWaiting();
   event.waitUntil(
@@ -31,7 +52,6 @@ self.addEventListener('install', event => {
   );
 });
 
-// Al activar, borra cualquier memoria vieja
 self.addEventListener('activate', event => {
   event.waitUntil(
     caches.keys().then(keys => {
@@ -44,7 +64,6 @@ self.addEventListener('activate', event => {
   );
 });
 
-// NETWORK FIRST
 self.addEventListener('fetch', event => {
   if (event.request.method !== 'GET' || !event.request.url.startsWith(self.location.origin)) {
     return;
