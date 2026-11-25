@@ -235,22 +235,12 @@
       transition: all 0.2s ease;
       width: 100%;
       text-align: left;
-    }
-
-    .doc-item.disponible {
       cursor: pointer;
     }
 
-    .doc-item.disponible:hover {
+    .doc-item:hover {
       background: rgba(212, 175, 55, 0.15);
       border-color: var(--gold);
-    }
-
-    .doc-item.no-disponible {
-      background: rgba(255, 255, 255, 0.015);
-      border: 1px dashed rgba(148, 163, 184, 0.25);
-      color: #64748b;
-      cursor: not-allowed;
     }
 
     .doc-left {
@@ -275,12 +265,6 @@
     .badge-pdf {
       background: #7f1d1d;
       color: #fca5a5;
-    }
-
-    .badge-pendiente {
-      background: rgba(234, 179, 8, 0.15);
-      color: #facc15;
-      border: 1px solid rgba(234, 179, 8, 0.4);
     }
 
     .doc-arrow {
@@ -437,13 +421,11 @@
 <body>
 
 <div class="container">
-
   <div class="carnet-wrapper">
     <img src="fondo-carnet.png" alt="Credencial Trascendiendo Fronteras" class="carnet-bg">
   </div>
 
   <div class="panel">
-    
     <div id="pinView" class="pin-box">
       <h3>📁 CARPETA VIRTUAL</h3>
       <p>Ingrese el PIN para ver los soportes oficiales.</p>
@@ -458,11 +440,10 @@
     </div>
 
     <div id="docsView" class="hidden">
-      
       <!-- 1. IDENTIDAD -->
       <div class="section-title">Documentos de Identidad</div>
       <div class="docs-list">
-        <button id="btnCedula" class="doc-item disponible" onclick="abrirVisor('Cédula de Ciudadanía', 'cedula.jpg')">
+        <button id="btnCedula" class="doc-item" onclick="abrirVisor('Cédula de Ciudadanía', 'cedula.jpg')">
           <div class="doc-left">
             <span>🪪</span>
             <span>Cédula de Ciudadanía</span>
@@ -470,8 +451,7 @@
           </div>
           <span class="doc-arrow">›</span>
         </button>
-
-        <button id="btnPasaporte" class="doc-item disponible" onclick="abrirVisor('Pasaporte Vigente', 'pasaporte.jpg')">
+        <button id="btnPasaporte" class="doc-item" onclick="abrirVisor('Pasaporte Vigente', 'pasaporte.jpg')">
           <div class="doc-left">
             <span>✈</span>
             <span>Pasaporte Oficial</span>
@@ -488,19 +468,14 @@
       <button class="btn-reporte" onclick="generarReporte()">
         <span>📥</span> Descargar Reporte Completo (PDF)
       </button>
-
       <button class="btn-cambiar-clave-secundario" onclick="mostrarModalCambioPIN(false)">
         🔑 Cambiar mi PIN de acceso
       </button>
-
       <div class="legal-note">
         🔒 Información verificada y protegida bajo custodia institucional.
       </div>
-
     </div>
-
   </div>
-
 </div>
 
 <!-- MODALES -->
@@ -543,7 +518,6 @@
 
 <script>
   const PIN_POR_DEFECTO = "1234";
-
   const DATOS_TITULAR = {
     nombre: "MARTHA GLADYS VARGAS BELTRAN",
     identificacion: "66824466",
@@ -551,7 +525,9 @@
     estado: "VERIFICADO / ACTIVO"
   };
 
-  // PROGRAMAS VISIBLES PARA ESTE TITULAR (true = carpeta visible / false = oculta)
+  // =========================================================================
+  // 1. ACTIVAR O DESACTIVAR CARPETAS COMPLETAS (true = se ve / false = oculto)
+  // =========================================================================
   const PROGRAMAS_ACTIVOS = {
     tienePasaporte: true,
     benefactorA: true,
@@ -559,10 +535,13 @@
     benefactorX: true,
     alianza: true,
     plan600: true,
-    otrosProgramas: false
+    laHerencia: false
   };
 
-  // CADA PROGRAMA CONTIENE EXCLUSIVAMENTE SUS 4 ARCHIVOS (VOUCHER, NDA, CIS, DDR)
+  // =========================================================================
+  // 2. ACTIVAR O DESACTIVAR DOCUMENTOS INDIVIDUALES (disponible: true / false)
+  // Si está en false, el documento NO aparecerá ni en pantalla ni en el reporte.
+  // =========================================================================
   const EXPEDIENTES_PROGRAMAS = [
     {
       id: 'benefactorA',
@@ -620,14 +599,14 @@
       ]
     },
     {
-      id: 'La Herencia',
+      id: 'laHerencia',
       nombre: 'Expediente La Herencia',
       icono: '📂',
       voucher: { nombre: 'Voucher y Soportes de Aporte', archivo: 'vouchers_la_herencia.pdf', disponible: true },
       legales: [
-        { nombre: 'Acuerdo NDA - Otros Programas', archivo: 'nda_la_herencia.pdf', disponible: true },
-        { nombre: 'CIS - la_herencia', archivo: 'cis_la_herencia.pdf', disponible: false },
-        { nombre: 'Reporte DDR - la_herencia', archivo: 'ddr_la_herencia.pdf', disponible: false }
+        { nombre: 'Acuerdo NDA - La Herencia', archivo: 'nda_la_herencia.pdf', disponible: true },
+        { nombre: 'CIS - La Herencia', archivo: 'cis_la_herencia.pdf', disponible: false },
+        { nombre: 'Reporte DDR - La Herencia', archivo: 'ddr_la_herencia.pdf', disponible: false }
       ]
     }
   ];
@@ -648,13 +627,20 @@
 
     EXPEDIENTES_PROGRAMAS.forEach((prog) => {
       if (PROGRAMAS_ACTIVOS[prog.id]) {
+        // Filtrar documentos disponibles
+        const tieneVoucher = prog.voucher && prog.voucher.disponible;
+        const legalesActivos = prog.legales.filter(leg => leg.disponible);
+
+        // Si la carpeta no tiene ningún documento en true, tampoco se dibuja
+        if (!tieneVoucher && legalesActivos.length === 0) return;
+
         totalCarpetasVisibles++;
 
-        // Renderizado del Voucher
-        let voucherHTML = '';
-        if (prog.voucher.disponible) {
-          voucherHTML = `
-            <a href="${prog.voucher.archivo}" target="_blank" class="doc-item disponible">
+        let seccionVoucherHTML = '';
+        if (tieneVoucher) {
+          seccionVoucherHTML = `
+            <span class="sub-seccion-label">🧾 Soporte de Pago:</span>
+            <a href="${prog.voucher.archivo}" target="_blank" class="doc-item">
               <div class="doc-left">
                 <span>📑</span>
                 <span>${prog.voucher.nombre}</span>
@@ -663,25 +649,14 @@
               <span class="doc-arrow">›</span>
             </a>
           `;
-        } else {
-          voucherHTML = `
-            <div class="doc-item no-disponible">
-              <div class="doc-left">
-                <span>📑</span>
-                <span>${prog.voucher.nombre}</span>
-                <span class="badge-tipo badge-pendiente">PENDIENTE</span>
-              </div>
-              <span style="font-size: 11px; color: #94a3b8;">En trámite</span>
-            </div>
-          `;
         }
 
-        // Renderizado de Legales (NDA, CIS, DDR)
-        let itemsLegalesHTML = '';
-        prog.legales.forEach(leg => {
-          if (leg.disponible) {
+        let seccionLegalesHTML = '';
+        if (legalesActivos.length > 0) {
+          let itemsLegalesHTML = '';
+          legalesActivos.forEach(leg => {
             itemsLegalesHTML += `
-              <a href="${leg.archivo}" target="_blank" class="doc-item disponible">
+              <a href="${leg.archivo}" target="_blank" class="doc-item">
                 <div class="doc-left">
                   <span>📜</span>
                   <span>${leg.nombre}</span>
@@ -690,19 +665,13 @@
                 <span class="doc-arrow">›</span>
               </a>
             `;
-          } else {
-            itemsLegalesHTML += `
-              <div class="doc-item no-disponible">
-                <div class="doc-left">
-                  <span>📜</span>
-                  <span>${leg.nombre}</span>
-                  <span class="badge-tipo badge-pendiente">NO DISPONIBLE</span>
-                </div>
-                <span style="font-size: 11px; color: #94a3b8;">En gestión</span>
-              </div>
-            `;
-          }
-        });
+          });
+
+          seccionLegalesHTML = `
+            <span class="sub-seccion-label" style="${tieneVoucher ? 'margin-top: 6px;' : ''}">⚖️ Documentos Legales:</span>
+            ${itemsLegalesHTML}
+          `;
+        }
 
         contenedor.innerHTML += `
           <div class="carpeta-programa" id="carpeta_${prog.id}">
@@ -711,11 +680,8 @@
               <span class="icono-flecha">▶</span>
             </div>
             <div class="carpeta-contenido">
-              <span class="sub-seccion-label">🧾 Soporte de Pago:</span>
-              ${voucherHTML}
-
-              <span class="sub-seccion-label" style="margin-top: 6px;">⚖️ Documentos Legales:</span>
-              ${itemsLegalesHTML}
+              ${seccionVoucherHTML}
+              ${seccionLegalesHTML}
             </div>
           </div>
         `;
@@ -759,7 +725,6 @@
   function desbloquearAcceso() {
     const pinView = document.getElementById("pinView");
     const docsView = document.getElementById("docsView");
-
     if (pinView) pinView.classList.add("hidden");
     if (docsView) docsView.classList.remove("hidden");
     renderizarCarpetas();
@@ -770,7 +735,6 @@
     const titulo = document.getElementById("tituloCambioPIN");
     const desc = document.getElementById("descCambioPIN");
     const error = document.getElementById("errorCambioPIN");
-
     document.getElementById("inputNuevoPIN").value = "";
     document.getElementById("inputConfirmarPIN").value = "";
     if (error) error.style.display = "none";
@@ -782,7 +746,6 @@
       titulo.innerText = "🔑 Modificar PIN de Acceso";
       desc.innerText = "Ingrese su nuevo PIN personal.";
     }
-
     if (modal) modal.classList.remove("hidden");
   }
 
@@ -796,7 +759,6 @@
       error.style.display = "block";
       return;
     }
-
     if (nuevo !== confirmar) {
       error.innerText = "Las claves no coinciden. Verifíquelas.";
       error.style.display = "block";
@@ -805,10 +767,8 @@
 
     localStorage.setItem("tf_pin_usuario", nuevo);
     localStorage.setItem("tf_pin_cambiado", "true");
-
     const modal = document.getElementById("modalCambioPIN");
     if (modal) modal.classList.add("hidden");
-
     alert("¡PIN asignado con éxito!");
     desbloquearAcceso();
   }
@@ -817,7 +777,6 @@
     const modal = document.getElementById("modalRecuperacion");
     const input = document.getElementById("inputDocRecuperar");
     const error = document.getElementById("errorRecuperacion");
-
     if (input) input.value = "";
     if (error) error.style.display = "none";
     if (modal) modal.classList.remove("hidden");
@@ -850,7 +809,6 @@
     const elTitulo = document.getElementById("modalTitulo");
     const elImg = document.getElementById("modalImg");
     const modal = document.getElementById("modalVisor");
-
     if (elTitulo) elTitulo.innerText = titulo;
     if (elImg) elImg.src = archivo;
     if (modal) modal.classList.remove("hidden");
@@ -870,14 +828,12 @@
         if (e.key === "Enter") validarPIN();
       });
     }
-
     const inputConfirmar = document.getElementById("inputConfirmarPIN");
     if (inputConfirmar) {
       inputConfirmar.addEventListener("keyup", function(e) {
         if (e.key === "Enter") guardarNuevoPIN();
       });
     }
-
     const inputDoc = document.getElementById("inputDocRecuperar");
     if (inputDoc) {
       inputDoc.addEventListener("keyup", function(e) {
@@ -886,7 +842,7 @@
     }
   });
 
-  // REPORTE PDF EXCLUSIVO POR BENEFACTOR
+  // REPORTE PDF SOLO CON DOCUMENTOS DISPONIBLES (disponible: true)
   function generarReporte() {
     const fecha = new Date().toLocaleDateString("es-CO", { year: 'numeric', month: 'long', day: 'numeric' });
     const rutaBase = window.location.href.split('?')[0].split('#')[0];
@@ -899,49 +855,45 @@
 
     EXPEDIENTES_PROGRAMAS.forEach(prog => {
       if (PROGRAMAS_ACTIVOS[prog.id]) {
-        listaReporte.push({
-          categoria: prog.nombre,
-          nombre: `${prog.voucher.nombre} (${prog.nombre})`,
-          archivo: prog.voucher.archivo,
-          disponible: prog.voucher.disponible
-        });
-
-        prog.legales.forEach(leg => {
+        if (prog.voucher && prog.voucher.disponible) {
           listaReporte.push({
             categoria: prog.nombre,
-            nombre: leg.nombre,
-            archivo: leg.archivo,
-            disponible: leg.disponible
+            nombre: `${prog.voucher.nombre} (${prog.nombre})`,
+            archivo: prog.voucher.archivo,
+            disponible: true
           });
+        }
+        prog.legales.forEach(leg => {
+          if (leg.disponible) {
+            listaReporte.push({
+              categoria: prog.nombre,
+              nombre: leg.nombre,
+              archivo: leg.archivo,
+              disponible: true
+            });
+          }
         });
       }
     });
 
     let filasTabla = '';
-
     listaReporte.forEach(function(doc) {
+      if (!doc.disponible) return;
       const linkCompleto = urlBase + doc.archivo;
-      const badgeEstado = doc.disponible 
-        ? `<span style="font-size: 10.5px; font-weight: 700; padding: 3px 8px; border-radius: 4px; background: #dcfce7; color: #166534;">✓ DISPONIBLE</span>`
-        : `<span style="font-size: 10.5px; font-weight: 700; padding: 3px 8px; border-radius: 4px; background: #fef9c3; color: #854d0e;">⏳ EN GESTIÓN</span>`;
-      
-      const botonAccion = doc.disponible
-        ? `<a href="${linkCompleto}" target="_blank" download="${doc.archivo}" style="display: inline-block; background: #0a192f; color: #fef08a; text-decoration: none; font-weight: 700; font-size: 11px; padding: 5px 12px; border-radius: 6px; border: 1px solid #d4af37;">📥 Descargar</a>`
-        : `<span style="color: #94a3b8; font-size: 11px; font-style: italic;">No disponible aún</span>`;
 
       filasTabla += `
         <tr>
           <td style="padding: 9px 12px; border: 1px solid #cbd5e1; font-size: 11px; font-weight: 700; color: #64748b;">
             ${doc.categoria}
           </td>
-          <td style="padding: 9px 12px; border: 1px solid #cbd5e1; font-weight: 600; color: ${doc.disponible ? '#1e293b' : '#64748b'};">
+          <td style="padding: 9px 12px; border: 1px solid #cbd5e1; font-weight: 600; color: #1e293b;">
             ${doc.nombre}
           </td>
           <td style="padding: 9px 12px; border: 1px solid #cbd5e1; text-align: center;">
-            ${badgeEstado}
+            <span style="font-size: 10.5px; font-weight: 700; padding: 3px 8px; border-radius: 4px; background: #dcfce7; color: #166534;">✓ DISPONIBLE</span>
           </td>
           <td style="padding: 9px 12px; border: 1px solid #cbd5e1; text-align: center;">
-            ${botonAccion}
+            <a href="${linkCompleto}" target="_blank" download="${doc.archivo}" style="display: inline-block; background: #0a192f; color: #fef08a; text-decoration: none; font-weight: 700; font-size: 11px; padding: 5px 12px; border-radius: 6px; border: 1px solid #d4af37;">📥 Descargar</a>
           </td>
         </tr>
       `;
@@ -988,7 +940,7 @@
           <div class="header">
             <div>
               <h1>${DATOS_TITULAR.entidad}</h1>
-              <h2>REPORTE OFICIAL Y AUDITORÍA DE SOPORTES</h2>
+              <h2>REPORTE OFICIAL Y DESCARGA DE SOPORTES</h2>
             </div>
             <div class="badge-status">${DATOS_TITULAR.estado}</div>
           </div>
@@ -1011,9 +963,9 @@
             </tr>
           </table>
           <div class="note-box">
-            💡 <strong>Instrucciones:</strong> Este documento audita el estado actual del expediente. Los archivos marcados como <strong>DISPONIBLE</strong> pueden descargarse directamente haciendo clic en su botón correspondiente. Los marcados como <strong>EN GESTIÓN</strong> se encuentran en proceso de emisión institucional.
+            💡 <strong>Instrucciones:</strong> Este documento relaciona los soportes activos del expediente. Haga clic sobre el botón <strong>"Descargar"</strong> de cualquier soporte para obtenerlo en alta resolución.
           </div>
-          <div class="sec-title">Estado de Soportes por Benefactor:</div>
+          <div class="sec-title">Soportes Activos por Benefactor:</div>
           <table class="table-docs">
             <thead>
               <tr>
@@ -1047,7 +999,8 @@
   // SERVICE WORKER
   if ('serviceWorker' in navigator) {
     window.addEventListener('load', function() {
-      navigator.serviceWorker.register('./sw.js').then(function(reg) {
+      navigator.serviceWorker.register('./sw.js', { updateViaCache: 'none' }).then(function(reg) {
+        reg.update();
         reg.onupdatefound = function() {
           const installingWorker = reg.installing;
           installingWorker.onstatechange = function() {
@@ -1060,6 +1013,5 @@
     });
   }
 </script>
-
 </body>
 </html>
