@@ -1,4 +1,5 @@
-const CACHE_NAME = 'carpeta-virtual-v3';
+const CACHE_NAME = 'carpeta-virtual-v4';
+
 const ARCHIVOS_OFFLINE = [
   './',
   './index.html',
@@ -78,6 +79,6 @@ self.addEventListener('fetch', event => {
         }
         return response;
       })
-      .catch(() => caches.match(event.request))
+      .catch(() => caches.match(event.request, { ignoreSearch: true }))
   );
 });
